@@ -83,7 +83,6 @@ class MainWindow:
             # Dekodování zprávy BASE64
             message = base64.b64decode(message)
             # Získání vektoru (první blok -> prvních 16 B)
-            print(AES.block_size)
             iv = message[:AES.block_size]
 
             # Použít iv v případě CBC
