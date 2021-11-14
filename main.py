@@ -9,6 +9,7 @@ import base64
 
 class MainWindow:
     def __init__(self):
+        #načtení a nastavení GUI
         self.builder = builder = pygubu.Builder()
         builder.add_from_file('ukol3.ui')
         self.main_frame = builder.get_object('main_frame')
@@ -38,54 +39,71 @@ class MainWindow:
         self.file_path = ""
 
     def encrypt(self, message, key, mode):
+        #Vygenerování náhodného vektoru
         iv = Random.new().read(AES.block_size)
+        #Použít iv v knihovně v případě CBC
         if mode == AES.MODE_CBC:
             cipher = AES.new(key, mode, iv)
         else:
             cipher = AES.new(key, mode)
+
+        #Uspořádaní dat po blocích
         padding = AES.block_size - len(message) % AES.block_size
         message += bytes([padding]) * padding
+
+        #Zašifrování textu
         data = iv + cipher.encrypt(message)
+        #Zakodování do BASE64
         result = base64.b64encode(data)
 
+        #Nastavení textu v GUI
         self.input_text.delete(1.0, "end")
         self.input_text.insert(1.0, result)
 
     def decrypt(self, message, key, mode):
+        #Dekodování zprávy BASE64
         message = base64.b64decode(message)
+        #Získání vektoru (první blok -> prvních 16 B)
         iv = message[:AES.block_size]
 
+        #Použít iv v knihovně v případě CBC
         if mode == AES.MODE_CBC:
             cipher = AES.new(key, mode, iv)
         else:
             cipher = AES.new(key, mode)
+        #Dešifrování dat
         data = cipher.decrypt(message[AES.block_size:])
         padding = data[-1]
 
         if data[-padding:] != bytes([padding]) * padding:
-            raise ValueError("Invalid padding...") # remove the padding
+            raise ValueError("Invalid padding...")
 
         self.input_text.delete(1.0, "end")
         self.input_text.insert(1.0, data[:-padding].decode("utf-8"))
 
     def encrypt_btn_click(self):
+        #Získání zprávy k zakódování a zakódování textu do UTF-8
         message = self.input_text.get("1.0", END).encode('utf-8')
         key = self.key_field.get()
         if len(key) < self.key_len or len(key) > self.key_len:
             raise Exception("Délka klíče musí být: {} znaků. Máte {} znaků".format(self.key_len, len(key)))
 
+        #Transformace zprávy do bytové podoby
         key = bytes(key, "utf-8")
         self.encrypt(message, key, self.mode)
 
     def decrypt_btn_click(self):
-        message = self.input_text.get("1.0", END)
+        # Získání zprávy k zakódování a zakódování textu do UTF-8
+        message = self.input_text.get("1.0", END).encode('utf-8')
         key = self.key_field.get()
         if len(key) < self.key_len or len(key) > self.key_len:
             raise Exception(
                 "Délka klíče musí být: {} znaků. Máte {} znaků".format(self.key_len, len(key)))
 
+        # Transformace zprávy do bytové podoby
         key = bytes(key, "utf-8")
         self.decrypt(message, key, self.mode)
+
     def text_load_btn_click(self):
         file_path = filedialog.askopenfilename(title="Vyber textový soubor", filetypes=
         [
@@ -115,9 +133,11 @@ class MainWindow:
         save_location.close()
 
     def vector_callback(self):
+        #callback funkce pro nastavení vektoru z GUI
         self.vector = self.vector_group.get()
 
     def mode_callback(self):
+        #callback funkce pro nastavení módu z GUI
         value = self.mode_group.get()
         if value == 1:
             self.mode = AES.MODE_CBC
@@ -125,6 +145,7 @@ class MainWindow:
             self.mode = AES.MODE_ECB
 
     def key_callback(self):
+        #callback funkce pro nastavení velikosti klíče z GUI
         value = self.key_group.get()
 
         if value == 1:
@@ -145,7 +166,8 @@ if __name__ == '__main__':
     root = Tk()
     root.title("KOSBD - úkol č. 3")
     app = MainWindow()
-
+    
+    #Nastavení dialogového okna pro oznámení chyb
     def report_callback_exception(self, exc, val, tb):
         showerror("Error", message=str(val))
 
