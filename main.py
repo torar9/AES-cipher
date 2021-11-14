@@ -43,6 +43,7 @@ class MainWindow:
 
     def encrypt(self, message, key, mode):
         try:
+            #Výběr způsobu generování vektoru
             if self.vector == 1:
                 # Vygenerování náhodného vektoru
                 iv = Random.new().read(AES.block_size)
@@ -95,7 +96,7 @@ class MainWindow:
             padding = data[-1]
 
             if data[-padding:] != bytes([padding]) * padding:
-                raise ValueError("Invalid padding...")
+                raise ValueError("Neplatné rozdělení bloků")
 
             self.input_text.delete(1.0, "end")
             self.input_text.insert(1.0, data[:-padding].decode("utf-8"))
@@ -174,11 +175,11 @@ class MainWindow:
             raise Exception("Soubor se nepovedlo uložit:  " + str(e))
 
     def vector_callback(self):
-        #callback funkce pro nastavení vektoru z GUI
+        #callback funkce pro nastavení vektoru po kliknutí na tlačítko
         self.vector = self.vector_group.get()
 
     def mode_callback(self):
-        #callback funkce pro nastavení módu z GUI
+        #callback funkce pro nastavení módu
         value = self.mode_group.get()
         if value == 1:
             self.mode = AES.MODE_CBC
@@ -186,7 +187,7 @@ class MainWindow:
             self.mode = AES.MODE_ECB
 
     def key_callback(self):
-        #callback funkce pro nastavení velikosti klíče z GUI
+        #callback funkce pro nastavení velikosti klíče po kliknutí na tlačítko
         value = self.key_group.get()
 
         if value == 1:
@@ -197,6 +198,7 @@ class MainWindow:
             self.key_len = 32
 
     def clear_btn_callback(self):
+        #callback funkce pro tlačítko reset
         self.input_text.config(state=NORMAL)
         self.errorLabel.config(text="")
         self.input_text.delete(1.0, "end")
