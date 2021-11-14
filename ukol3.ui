@@ -55,7 +55,7 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="propagate">True</property>
-          <property name="row">4</property>
+          <property name="row">5</property>
           <property name="sticky">sw</property>
         </layout>
         <child>
@@ -197,7 +197,7 @@
             <child>
               <object class="ttk.Radiobutton" id="radiobutton2">
                 <property name="command" type="command" cbtype="simple">vector_callback</property>
-                <property name="text" translatable="yes">ESSIV</property>
+                <property name="text" translatable="yes">null</property>
                 <property name="value">2</property>
                 <property name="variable">int:vector_group</property>
                 <layout manager="pack">
@@ -209,7 +209,7 @@
             <child>
               <object class="ttk.Radiobutton" id="radiobutton1">
                 <property name="command" type="command" cbtype="simple">vector_callback</property>
-                <property name="text" translatable="yes">plain64</property>
+                <property name="text" translatable="yes">random</property>
                 <property name="value">1</property>
                 <property name="variable">int:vector_group</property>
                 <layout manager="pack">
@@ -265,13 +265,13 @@
     <child>
       <object class="ttk.Button" id="clear_btn">
         <property name="command" type="command" cbtype="simple">clear_btn_callback</property>
-        <property name="text" translatable="yes">Smazat</property>
+        <property name="text" translatable="yes">Reset</property>
         <layout manager="grid">
           <property name="column">0</property>
           <property name="padx">5</property>
           <property name="pady">0</property>
           <property name="propagate">True</property>
-          <property name="row">3</property>
+          <property name="row">4</property>
           <property name="sticky">w</property>
         </layout>
       </object>
@@ -286,6 +286,17 @@
           <property name="propagate">True</property>
           <property name="row">3</property>
           <property name="sticky">e</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="errorLabel">
+        <property name="foreground">#ff0000</property>
+        <layout manager="grid">
+          <property name="padx">5</property>
+          <property name="pady">5</property>
+          <property name="row">3</property>
+          <property name="sticky">w</property>
         </layout>
       </object>
     </child>
