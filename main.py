@@ -134,7 +134,7 @@ class MainWindow:
         self.decrypt(message, key, self.mode)
 
     def load_file(self):
-        #Otevření dialogového okýnka pro načtení textového souboru
+        #Otevření dialogového okna pro načtení textového souboru
         try:
             file_path = filedialog.askopenfilename(title="Vyber textový soubor", filetypes=
             [
@@ -148,7 +148,7 @@ class MainWindow:
                 data = file.read()
                 file_size = os.path.getsize(file_path)
 
-                self.big_input = True if file_size >= 1000000 else False
+                self.big_input = True if file_size >= 2000001 else False
 
                 self.input_text.delete(1.0, "end")
                 self.input_text.insert(1.0, data)
