@@ -47,17 +47,18 @@ class MainWindow:
 
     def encrypt(self, message, key, mode):
         try:
-            #Výběr způsobu generování vektoru
+            #Výběr způsobu generování vektoru 'random' nebo 'null' podle výběru uživatele
             if self.vector == 1:
                 # Vygenerování náhodného vektoru
                 iv = Random.new().read(AES.block_size)
             else:
-                #Vygenerování vektoru dosazením samých nul
+                #Vygenerování vektoru dosazením samých null hodnot do bloku
                 iv = b'\0' * AES.block_size
             # Použít iv v případě CBC
             if mode == AES.MODE_CBC:
                 cipher = AES.new(key, mode, iv)
             else:
+                #V případě ECB knihovna IV nepožaduje
                 cipher = AES.new(key, mode)
 
             # Uspořádaní dat po blocích
@@ -65,8 +66,8 @@ class MainWindow:
             message += bytes([padding]) * padding
 
             # Zašifrování textu
-            data = iv + cipher.encrypt(message)
-            # Zakodování do BASE64
+            data = iv + cipher.encrypt(message) # IV + zpráva
+            # Zakodování BASE64
             result = base64.b64encode(data)
 
             #Z výkonostních důvodů zakázat editaci textu v případě velkého vstupu
@@ -108,7 +109,7 @@ class MainWindow:
 
     def encrypt_btn_click(self):
         self.input_text.config(state=NORMAL)
-        #Získání zprávy k zakódování a zakódování textu do UTF-8
+        #Získání zprávy k zakódování z widgety a následné zakódování textu do UTF-8
         message = self.input_text.get("1.0", END).encode('utf-8')
 
         key = self.key_field.get()
@@ -133,6 +134,7 @@ class MainWindow:
         self.decrypt(message, key, self.mode)
 
     def load_file(self):
+        #Otevření dialogového okýnka pro načtení textového souboru
         try:
             file_path = filedialog.askopenfilename(title="Vyber textový soubor", filetypes=
             [
@@ -141,6 +143,7 @@ class MainWindow:
             if not file_path or file_path is None or file_path == "":
                 return
 
+            #Otevření samostatného souboru a načtení dat
             with open(file_path, 'r') as file:
                 data = file.read()
                 file_size = os.path.getsize(file_path)
@@ -200,7 +203,7 @@ class MainWindow:
             self.mode = AES.MODE_ECB
 
     def key_callback(self):
-        #callback funkce pro nastavení velikosti klíče po kliknutí na tlačítko
+        #callback funkce pro nastavení velikosti klíče po kliknutí na radiobutton
         value = self.key_group.get()
 
         if value == 1:
