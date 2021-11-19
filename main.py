@@ -81,7 +81,7 @@ class MainWindow:
             if (self.big_input):
                 self.input_text.config(state=DISABLED)
         except Exception as e:
-            raise Exception("Něco se nepovedlo. Zkuste překontrolovat konfiguraci.")
+            raise Exception("Něco se nepovedlo.\nZkuste překontrolovat konfiguraci.")
 
     def decrypt(self, message, key, mode):
         try:
@@ -105,7 +105,7 @@ class MainWindow:
             self.input_text.delete(1.0, "end")
             self.input_text.insert(1.0, data[:-padding].decode("utf-8"))
         except Exception as e:
-            raise Exception("Něco se nepovedlo. Zkuste překontrolovat konfiguraci.")
+            raise Exception("Něco se nepovedlo.\nZkuste překontrolovat konfiguraci.")
 
     def encrypt_btn_click(self):
         self.input_text.config(state=NORMAL)
@@ -114,7 +114,7 @@ class MainWindow:
 
         key = self.key_field.get()
         if len(key) < self.key_len or len(key) > self.key_len:
-            raise Exception("Délka klíče musí být: {} znaků. Máte {} znaků".format(self.key_len, len(key)))
+            raise Exception("Délka klíče musí být: {} znaků.\nMáte: {} znaků".format(self.key_len, len(key)))
 
         #Transformace zprávy do bytové podoby
         key = bytes(key, "utf-8")
@@ -127,7 +127,7 @@ class MainWindow:
         key = self.key_field.get()
         if len(key) < self.key_len or len(key) > self.key_len:
             raise Exception(
-                "Délka klíče musí být: {} znaků. Máte {} znaků".format(self.key_len, len(key)))
+                "Délka klíče musí být: {} znaků.\nMáte {} znaků".format(self.key_len, len(key)))
 
         # Transformace zprávy do bytové podoby
         key = bytes(key, "utf-8")
