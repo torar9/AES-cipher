@@ -1,9 +1,13 @@
 from tkinter.messagebox import showerror
 from tkinter import filedialog
+from tkinter import *
 from Crypto.Cipher import AES
+from pygubu.builder import ttkstdwidgets
+from pygubu.builder import *
 from Crypto import Random
 from tkinter import *
 import tkinter as tk
+import threading
 import pygubu
 import base64
 import os
@@ -128,7 +132,7 @@ class MainWindow:
         key = bytes(key, "utf-8")
         self.decrypt(message, key, self.mode)
 
-    def text_load_btn_click(self):
+    def load_file(self):
         try:
             file_path = filedialog.askopenfilename(title="Vyber textový soubor", filetypes=
             [
@@ -139,25 +143,30 @@ class MainWindow:
 
             with open(file_path, 'r') as file:
                 data = file.read()
+                file_size = os.path.getsize(file_path)
+
+                self.big_input = True if file_size >= 1000000 else False
+
+                self.input_text.delete(1.0, "end")
+                self.input_text.insert(1.0, data)
+
+                if self.big_input:
+                    self.input_text.config(state=DISABLED)
+                    self.errorLabel.config(text='Vstup příliš velký, editace textu vypnuta.')
+                else:
+                    self.input_text.config(state=NORMAL)
+                    self.errorLabel.config(text='')
                 file.close()
-
-            file_size = os.path.getsize(file_path)
-
-            self.big_input = True if file_size >= 1000000 else False
-
-            self.input_text.delete(1.0, "end")
-            self.input_text.insert(1.0, data)
-
-            if self.big_input:
-                self.input_text.config(state=DISABLED)
-                self.errorLabel.config(text='Vstup příliš velký, editace textu vypnuta.')
-            else:
-                self.input_text.config(state=NORMAL)
-                self.errorLabel.config(text='')
         except Exception as e:
             raise Exception("Nepovedlo se načíst soubor: " + str(e))
 
-    def save_btn_click(self):
+    def text_load_btn_click(self):
+        # Spuštění nového vlákna pro načtení souboru
+        startit = threading.Thread(target=self.load_file)
+        startit.start()
+
+    def save_file(self):
+        #Uložení souboru
         try:
             save_location = filedialog.asksaveasfile(mode='w', initialfile="cipher", defaultextension=".txt",
                                                      filetypes=
@@ -172,6 +181,11 @@ class MainWindow:
             save_location.close()
         except Exception as e:
             raise Exception("Soubor se nepovedlo uložit:  " + str(e))
+
+    def save_btn_click(self):
+        #Spuštění nového vlákna pro uložení souboru
+        startit = threading.Thread(target=self.save_file)
+        startit.start()
 
     def vector_callback(self):
         #callback funkce pro nastavení vektoru po kliknutí na tlačítko
