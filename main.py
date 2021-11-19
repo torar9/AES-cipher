@@ -75,7 +75,9 @@ class MainWindow:
             #Nastavení textu v GUI
             result = result.decode()
             # Z výkonostních důvodů povolit maximálně 55 znaků na řádek
-            result = '\n'.join(result[i:i + 55] for i in range(0, len(result), 55))
+            if self.big_input:
+                result = '\n'.join(result[i:i + 55] for i in range(0, len(result), 55))
+                
             self.input_text.delete(1.0, "end")
             self.input_text.insert(1.0, result)
         except Exception as e:
@@ -146,7 +148,7 @@ class MainWindow:
                 data = file.read()
                 file_size = os.path.getsize(file_path)
 
-                self.big_input = True if file_size >= 2000001 else False
+                self.big_input = True if file_size >= 1000001 else False
 
                 self.input_text.delete(1.0, "end")
                 self.input_text.insert(1.0, data)
