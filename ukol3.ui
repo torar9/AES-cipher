@@ -10,9 +10,13 @@
     <child>
       <object class="tk.Text" id="input_text">
         <property name="height">15</property>
+        <property name="insertofftime">500</property>
+        <property name="insertontime">500</property>
         <property name="takefocus">false</property>
         <property name="text" translatable="yes">+ěščřřžý123Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean fermentum risus id tortor. Maecenas aliquet accumsan leo. Fusce wisi. Phasellus et lorem id felis nonummy placerat. Duis pulvinar. Nunc dapibus tortor vel mi dapibus sollicitudin. Suspendisse nisl. Pellentesque sapien. Etiam bibendum elit eget erat. Proin in tellus sit amet nibh dignissim sagittis. Donec iaculis gravida nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec quis nibh at felis congue commodo. Mauris dolor felis, sagittis at, luctus sed, aliquam non, tellus. Duis pulvinar. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</property>
+        <property name="undo">true</property>
         <property name="width">55</property>
+        <property name="wrap">word</property>
         <layout manager="grid">
           <property name="column">0</property>
           <property name="padx">5</property>
@@ -286,17 +290,6 @@
           <property name="propagate">True</property>
           <property name="row">3</property>
           <property name="sticky">e</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="errorLabel">
-        <property name="foreground">#ff0000</property>
-        <layout manager="grid">
-          <property name="padx">5</property>
-          <property name="pady">5</property>
-          <property name="row">3</property>
-          <property name="sticky">w</property>
         </layout>
       </object>
     </child>

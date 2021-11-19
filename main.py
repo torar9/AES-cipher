@@ -13,7 +13,8 @@ import base64
 import os
 
 class MainWindow:
-    def __init__(self):
+    def __init__(self, root):
+        self.root = root
         #načtení a nastavení GUI
         self.builder = builder = pygubu.Builder()
         builder.add_from_file('ukol3.ui')
@@ -21,9 +22,10 @@ class MainWindow:
         builder.connect_callbacks(self)
 
         self.text_load_btn = builder.get_object('text_load_btn')
+
         self.input_text = builder.get_object('input_text')
+
         self.key_field = builder.get_object('key_field')
-        self.errorLabel = builder.get_object('errorLabel')
 
         self.vector_group = builder.get_variable("vector_group")
         self.mode_group = builder.get_variable("mode_group")
@@ -70,16 +72,12 @@ class MainWindow:
             # Zakodování BASE64
             result = base64.b64encode(data)
 
-            #Z výkonostních důvodů zakázat editaci textu v případě velkého vstupu
-            if(self.big_input):
-                self.input_text.config(state=NORMAL)
-
             #Nastavení textu v GUI
+            result = result.decode()
+            # Z výkonostních důvodů povolit maximálně 55 znaků na řádek
+            result = '\n'.join(result[i:i + 55] for i in range(0, len(result), 55))
             self.input_text.delete(1.0, "end")
             self.input_text.insert(1.0, result)
-
-            if (self.big_input):
-                self.input_text.config(state=DISABLED)
         except Exception as e:
             raise Exception("Něco se nepovedlo.\nZkuste překontrolovat konfiguraci.")
 
@@ -152,13 +150,6 @@ class MainWindow:
 
                 self.input_text.delete(1.0, "end")
                 self.input_text.insert(1.0, data)
-
-                if self.big_input:
-                    self.input_text.config(state=DISABLED)
-                    self.errorLabel.config(text='Vstup příliš velký, editace textu vypnuta.')
-                else:
-                    self.input_text.config(state=NORMAL)
-                    self.errorLabel.config(text='')
                 file.close()
         except Exception as e:
             raise Exception("Nepovedlo se načíst soubor: " + str(e))
@@ -215,8 +206,6 @@ class MainWindow:
 
     def clear_btn_callback(self):
         #callback funkce pro tlačítko reset
-        self.input_text.config(state=NORMAL)
-        self.errorLabel.config(text="")
         self.input_text.delete(1.0, "end")
         self.key_field.delete(0, END)
 
@@ -226,7 +215,7 @@ class MainWindow:
 if __name__ == '__main__':
     root = Tk()
     root.title("KOSBD - úkol č. 3")
-    app = MainWindow()
+    app = MainWindow(root)
     
     #Nastavení dialogového okna pro oznámení chyb
     def report_callback_exception(self, exc, val, tb):
